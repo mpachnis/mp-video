@@ -1,0 +1,98 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../mp-video.html">
+</head>
+<body>
+
+    <test-fixture id="youtube">
+        <template>
+            <mp-video youtube
+                      video-id="8-Zq2KUN6jM">
+            </mp-video>
+        </template>
+    </test-fixture>
+
+    <test-fixture id="vimeo">
+        <template>
+            <mp-video vimeo></mp-video>
+        </template>
+    </test-fixture>
+
+    <test-fixture id="html">
+        <template>
+            <mp-video html-video
+                      html-video-mp4="https://www.html5rocks.com/en/tutorials/video/basics/devstories.mp4">
+            </mp-video>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe("<mp-video youtube>", function() {
+            var youtube;
+
+            beforeEach(function() {
+                youtube = fixture("youtube")
+            });
+
+            context("", function() {
+
+                it("YouTube embed <iframe> is present", function() {
+                    expect(youtube.querySelector("iframe")).to.be.ok;
+                });
+                it("youtube should have a video id", function() {
+                    assert.ok(youtube.videoId);
+                });
+            })
+        });
+
+        describe("<mp-video vimeo>", function() {
+            var youtube;
+
+            beforeEach(function() {
+                vimeo = fixture("vimeo")
+            });
+
+            context("", function() {
+
+                it("Vimeo embed <iframe> is present", function() {
+                    expect(vimeo.querySelector("iframe")).to.be.ok;
+                });
+                it("vimeo should't have a video id", function() {
+                    assert.notOk(vimeo.videoId);
+                });
+            })
+        });
+
+        describe("<mp-video html-video>", function() {
+            var html;
+
+            beforeEach(function() {
+                html = fixture("html")
+            });
+
+            context("", function() {
+
+                it("HTML5 video is present", function() {
+                    expect(html.querySelector("video")).to.be.ok;
+                });
+
+                it("HTML5 video tag must return mp4 type", function() {
+                    var html = fixture("html");
+                    var element = html._createHtmlVideoPlayer();
+                    var elemSplit = element.children[0].children[0].src.split('.')
+                    var fileName = elemSplit[elemSplit.length - 1];
+
+                    assert.equal(fileName, 'mp4');
+                });
+            })
+        });
+    </script>
+</body>
+</html>

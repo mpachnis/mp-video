@@ -1,0 +1,280 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<script src="//f.vimeocdn.com/js/froogaloop2.min.js"></script>
+
+<!--
+    YouTube, Vimeo and HTML5 video playback web component.
+    Specify the video type you want to embed: `youtube`, `vimeo` or `html-video`,
+    add the video source you want, for youtube and vimeo you must will specified the `video-id`, for `html-video` the `html-video-mp4`, `html-video-ogg` or `html-video-webm`. That's it.
+    Videos designed to be responsive. Wrap the `<mp-video>` to a div and set the width into that div.
+
+    Example:
+
+        <div class="video-container">
+            <mp-video youtube video-id="..."></mp-video>
+            <mp-video vimeo video-id="..."></mp-video>
+            <mp-video html-video html-video-mp4="..."></mp-video>
+        </div>
+
+    @demo demo/index.html
+-->
+
+<dom-module id="mp-video">
+    <style>
+        :host {
+            font: normal 14px "Helvetica Neue", Helvetica;
+            margin: 0 0 30px;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .video-container {
+            height: 0;
+            padding: 0;
+            padding-bottom: 56.25%; /* 16:9 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        #youtubeVideo, #vimeoVideo, #htmlVideo { margin: 0 0 30px; }
+
+        ::content .video-container iframe,
+        ::content .video-container video {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #notifications {
+            --paper-toast-background-color: red;
+            --paper-toast-color: white;
+        }
+
+            #notifications a { color: white; }
+    </style>
+
+    <template>
+        <div class="video-container">
+            <div id="youtubeVideo"></div>
+            <div id="vimeoVideo"></div>
+            <div id="htmlVideo"></div>
+        </div>
+
+        <paper-toast id="notifications" class="fit-bottom">
+            <a href="http://minas.pachnis.com/projects/mp-video/bower_components/mp-video/" target="_blank"> Check the documentation for more info</a>
+        </paper-toast>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'mp-video',
+
+            properties: {
+                /**
+                * Specify youtube embedded video.
+                */
+                youtube: {
+                    type: Boolean
+                },
+                /**
+                * Specify vimeo embedded video.
+                */
+                vimeo: {
+                    type: Boolean
+                },
+                /**
+                * Specify HTML5 embedded video.
+                */
+                htmlVideo: {
+                    type: Boolean
+                },
+                /**
+                * YouTube video ID
+                */
+                videoId: {
+                    type: String
+                },
+                /**
+                * Set to "1" if youtube video should start automatically.
+                */
+                videoAutoplay: {
+                    type: Number,
+                    value: 0
+                },
+                /**
+                * Sets the current volume of the audio/video.
+                * For youtube must be a number between 0 (lowest) and 100 (highest).
+                * For vimeo and html5 must be a number between 0.0 (lowest) and 1.0 (highest).
+                */
+                videoVolume: {
+                    type: Number
+                },
+                /**
+                * Set to "1" to enable youtube frameborder.
+                */
+                videoFrameborder: {
+                    type: Number,
+                    value: 0
+                },
+                /**
+                * Specify the color of the video controls for vimeo player.
+                * use Hexadecimal colors (HEX) escaping the #. ex: vimeo-player-color="d60000"
+                */
+                vimeoPlayerColor: {
+                    type: String,
+                    value: ""
+                },
+                /**
+                * HTML5 mp4 video type.
+                */
+                htmlVideoMp4: {
+                    type: String,
+                    value: ""
+                },
+                /**
+                * HTML5 ogg video type.
+                */
+                htmlVideoOgg: {
+                    type: String,
+                    value: ""
+                },
+                /**
+                * HTML5 webm video type.
+                */
+                htmlVideoWebm: {
+                    type: String,
+                    value: ""
+                },
+                /**
+                * Adds a default video control overlay for the html5 video.
+                */
+                htmlVideoControls: {
+                    type: Boolean
+                },
+                /**
+                * Provides an image to show before the html5 video loads.
+                */
+                htmlVideoThumbnail: {
+                    type: String,
+                    value: ""
+                },
+                /**
+                * Sets or returns whether the audio/video should start loading as soon as the page loads, Values can be:
+                * auto => Indicates that the audio/video should start loading as soon as the page loads.
+                * metadata => Indicates that only the metadata for the audio/video should be loaded when the page loads.
+                * none => Indicates that the audio/video should NOT start loading as soon as the page loads.
+                */
+                htmlVideoPreload: {
+                    type: String
+                },
+                /**
+                * The autoplay property sets or returns whether the audio/video should start playing as soon as it is loaded.
+                */
+                videoAutoPlay: {
+                    type: Boolean
+                },
+                /**
+                * Allow player to go fullscreen
+                */
+                allowfullscreen: {
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            ready: function() {
+                // if none of the embedded video player passed send a notification
+                if (!this.youtube && !this.vimeo && !this.htmlVideo) {
+                    this.$.notifications.text = "You haven't specify any video player (youtube, vimeo, html5)."
+                    this.$.notifications.duration = 10000;
+                    this.$.notifications.show();
+                    return;
+                };
+
+                if (this.youtube) {
+                    this._createYoutubePlayer();
+                }
+
+                if (this.vimeo) {
+                    this._createVimeoPlayer();
+                }
+
+                if (this.htmlVideo) {
+                    this._createHtmlVideoPlayer();
+                }
+            },
+            // build the youtube iframe
+            _createYoutubePlayer: function() {
+                var youtubeVideos = document.getElementsByTagName('mp-video');
+                var iframe = document.createElement('iframe');
+
+                iframe.setAttribute('src', '//www.youtube.com/embed/' + this.videoId + "?autoplay=" + this.videoAutoplay);
+                iframe.setAttribute('frameborder', this.videoFrameborder);
+                iframe.volume = this.videoVolume;
+                if (this.allowfullscreen) {
+                    iframe.setAttribute('allowfullscreen', '');
+                }
+
+                this.$.youtubeVideo.appendChild(iframe);
+                return this.$.youtubeVideo;
+            },
+            // build the vimeo iframe
+            _createVimeoPlayer: function() {
+                var elem = this;
+                var iframe = document.createElement('iframe');
+                var player = $f(iframe);
+
+                iframe.setAttribute('src', '//player.vimeo.com/video/' + this.videoId + "?api=1&autoplay=" + this.videoAutoplay + "&color=" + this.vimeoPlayerColor);
+                iframe.setAttribute('autoplay', this.videoAutoplay);
+                iframe.setAttribute('frameborder', this.videoFrameborder);
+                if (this.allowfullscreen) {
+                    iframe.setAttribute('allowfullscreen', '');
+                }
+
+                player.addEvent('ready', function() {
+                    player.api('setVolume', elem.videoVolume);
+                });
+
+                this.$.vimeoVideo.appendChild(iframe);
+                return this.$.vimeoVideo;
+            },
+            // build the html5 video element
+            _createHtmlVideoPlayer: function() {
+                // player
+                var video = document.createElement('video');
+                video.setAttribute('poster', this.htmlVideoThumbnail);
+                video.controls = this.htmlVideoControls;
+                video.autoplay = this.videoAutoPlay;
+                video.preload = this.htmlVideoPreload;
+                video.volume = (this.videoVolume !== undefined ? this.videoVolume : "1.0");
+
+                if (this.htmlVideoMp4) {
+                    var sourceMp4 = document.createElement('source');
+                    sourceMp4.setAttribute('src', this.htmlVideoMp4);
+                    sourceMp4.setAttribute('type', 'video/mp4');
+                    video.appendChild(sourceMp4);
+                }
+
+                if (this.htmlVideoOgg) {
+                     var sourceOgg = document.createElement('source');
+                    sourceOgg.setAttribute('src', this.htmlVideoOgg);
+                    sourceOgg.setAttribute('type', 'video/ogg');
+                    video.appendChild(sourceOgg);
+                }
+
+                if (this.htmlVideoWebm) {
+                     var sourceWebm = document.createElement('source');
+                    sourceWebm.setAttribute('src', this.htmlVideoWebm);
+                    sourceWebm.setAttribute('type', 'video/webm');
+                    video.appendChild(sourceWebm);
+                }
+
+                this.$.htmlVideo.appendChild(video);
+                return this.$.htmlVideo;
+            }
+
+        });
+    </script>
+</dom-module>

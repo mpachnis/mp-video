@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+    <head>
+        <title>A responsive material design for embedded youTube, Vimeo or html5 videos</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="../../webcomponentsjs/webcomponents.js"></script>
+        <script src="//f.vimeocdn.com/js/froogaloop2.min.js"></script>
+        <link rel="import" href="../mp-video.html" />
+        <style>
+            .card {
+                margin: 24px;
+                padding: 16px;
+                color: #757575;
+                border-radius: 5px;
+                background-color: #fff;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            }
+
+            .mpvideo { width: 70%; margin: 0 auto; }
+
+            footer { font: normal 12px "Helvetica Neue"; margin: 50px 0 0; display: block; }
+        </style>
+    </head>
+
+        <body>
+            <div class="card">
+                <div class="mpvideo">
+                    <mp-video youtube
+                              video-id="8-Zq2KUN6jM"
+                              video-autoplay="0"
+                              allowfullscreen>
+                    </mp-video>
+                    <mp-video vimeo
+                              video-id="78323839"
+                              video-autoplay="0"
+                              vimeo-player-color="ccc"
+                              video-volume="0.5"
+                              allowfullscreen>
+                    </mp-video>
+                    <mp-video html-video
+                              video-volume="0.2"
+                              html-video-controls
+                              html-video-preload="auto"
+                              html-video-thumbnail="https://www.html5rocks.com/en/tutorials/video/basics/poster.png"
+                              html-video-mp4="https://www.html5rocks.com/en/tutorials/video/basics/devstories.mp4"
+                              html-video-webm="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm">
+                    </mp-video>
+                </div>
+
+                <footer>HTML5 video copyright <a href="https://www.html5rocks.com/en/tutorials/video/basics/" target="_blank">html5rocks</a></footer>
+            </div>
+
+        </body>
+    </html>
+</html>
