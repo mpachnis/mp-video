@@ -9,7 +9,7 @@ YouTube, Vimeo and HTML5 video playback web component.
 ## How it works
 
 Specify the video type you want to embed: `youtube`, `vimeo` or `html-video`,
-add the video source you want, for youtube and vimeo you must will specified the `video-id`, for `html-video` the `html-video-mp4`, `html-video-ogg` or `html-video-webm`. That's it.
+add the video source you want, for youtube and vimeo you must specify the `video-id`, for `html-video` the `html-video-mp4`, `html-video-ogg` or `html-video-webm`. That's it.
 Videos designed to be responsive. Wrap the `<mp-video>` to a div and set the width into that div.
 
 
