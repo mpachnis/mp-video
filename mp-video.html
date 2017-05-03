@@ -38,8 +38,8 @@
 
         #youtubeVideo, #vimeoVideo, #htmlVideo { margin: 0 0 30px; }
 
-        ::content .video-container iframe,
-        ::content .video-container video {
+        .video-container iframe,
+        .video-container video {
             width: 100%;
             height: 100%;
             position: absolute;
@@ -217,7 +217,7 @@
                     iframe.setAttribute('allowfullscreen', '');
                 }
 
-                this.$.youtubeVideo.appendChild(iframe);
+                Polymer.dom(this.$.youtubeVideo).appendChild(iframe);
                 return this.$.youtubeVideo;
             },
             // build the vimeo iframe
@@ -237,7 +237,7 @@
                     player.api('setVolume', elem.videoVolume);
                 });
 
-                this.$.vimeoVideo.appendChild(iframe);
+                Polymer.dom(this.$.vimeoVideo).appendChild(iframe);
                 return this.$.vimeoVideo;
             },
             // build the html5 video element
@@ -254,24 +254,24 @@
                     var sourceMp4 = document.createElement('source');
                     sourceMp4.setAttribute('src', this.htmlVideoMp4);
                     sourceMp4.setAttribute('type', 'video/mp4');
-                    video.appendChild(sourceMp4);
+                    Polymer.dom(video).appendChild(sourceMp4);
                 }
 
                 if (this.htmlVideoOgg) {
                      var sourceOgg = document.createElement('source');
                     sourceOgg.setAttribute('src', this.htmlVideoOgg);
                     sourceOgg.setAttribute('type', 'video/ogg');
-                    video.appendChild(sourceOgg);
+                    Polymer.dom(video).appendChild(sourceOgg);
                 }
 
                 if (this.htmlVideoWebm) {
                      var sourceWebm = document.createElement('source');
                     sourceWebm.setAttribute('src', this.htmlVideoWebm);
                     sourceWebm.setAttribute('type', 'video/webm');
-                    video.appendChild(sourceWebm);
+                    Polymer.dom(video).appendChild(sourceWebm);
                 }
 
-                this.$.htmlVideo.appendChild(video);
+                Polymer.dom(this.$.htmlVideo).appendChild(video);
                 return this.$.htmlVideo;
             }
 
