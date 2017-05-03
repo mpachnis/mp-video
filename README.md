@@ -15,7 +15,7 @@ Videos designed to be responsive. Wrap the `<mp-video>` to a div and set the wid
 
 ## Demo
 
-[mp-slider docs & demo](http://minas.pachnis.com/projects/mp-video/bower_components/mp-video/)
+[mp-slider docs & demo](https://www.webcomponents.org/element/mpachnis/mp-video)
 
 
 ## Install the component using [Bower](http://bower.io/):
