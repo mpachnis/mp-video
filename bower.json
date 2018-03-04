@@ -1,7 +1,7 @@
 {
     "name": "mp-video",
     "description": "YouTube, Vimeo and HTML5 video playback web component based on Polymer 2.0",
-    "version": "2.0",
+    "version": "2.0.0",
     "homepage": "https://minas.pachnis.com",
     "authors": [
         "Minas Pachnis <minas@bugeffect.com>"
