@@ -1,7 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="mp-video-styles.html">
+
 <script src="//f.vimeocdn.com/js/froogaloop2.min.js"></script>
-<script src="https://www.youtube.com/player_api"></script>
 
 <!--
     YouTube, Vimeo and HTML5 video playback web component.
@@ -21,42 +22,9 @@
 -->
 
 <dom-module id="mp-video">
-    <style>
-        :host {
-            font: normal 14px "Helvetica Neue", Helvetica;
-            margin: 0 0 30px;
-            display: block;
-            box-sizing: border-box;
-        }
-
-        .video-container {
-            height: 0;
-            padding: 0;
-            padding-bottom: 56.25%; /* 16:9 */
-            position: relative;
-            overflow: hidden;
-        }
-
-        #youtubeVideo, #vimeoVideo, #htmlVideo { margin: 0 0 30px; }
-
-        .video-container iframe,
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        #notifications {
-            --paper-toast-background-color: red;
-            --paper-toast-color: white;
-        }
-
-            #notifications a { color: white; }
-    </style>
-
     <template>
+        <style include="mp-video-styles"></style>
+
         <div class="video-container">
             <div id="youtubeVideo"></div>
             <div id="vimeoVideo"></div>
@@ -64,131 +32,126 @@
         </div>
 
         <paper-toast id="notifications" class="fit-bottom">
-            <a href="http://minas.pachnis.com/projects/mp-video/bower_components/mp-video/" target="_blank"> Check the documentation for more info</a>
+            <a href="https://www.webcomponents.org/element/mpachnis/mp-video/elements/mp-video" target="_blank"> Check the documentation for more info</a>
         </paper-toast>
     </template>
 
     <script>
-        Polymer({
-            is: 'mp-video',
+        var youtubePlayer;
 
-            properties: {
-                /**
-                * Specify youtube embedded video.
-                */
-                youtube: {
-                    type: Boolean
-                },
-                /**
-                * Specify vimeo embedded video.
-                */
-                vimeo: {
-                    type: Boolean
-                },
-                /**
-                * Specify HTML5 embedded video.
-                */
-                htmlVideo: {
-                    type: Boolean
-                },
-                /**
-                * YouTube video ID
-                */
-                videoId: {
-                    type: String
-                },
-                /**
-                * Set to "1" if youtube video should start automatically.
-                */
-                videoAutoplay: {
-                    type: Number,
-                    value: 0
-                },
-                /**
-                * Sets the current volume of the audio/video.
-                * For youtube must be a number between 0 (lowest) and 100 (highest).
-                * For vimeo and html5 must be a number between 0.0 (lowest) and 1.0 (highest).
-                */
-                videoVolume: {
-                    type: Number
-                },
-                /**
-                * Set to "1" to enable youtube frameborder.
-                */
-                videoFrameborder: {
-                    type: Number,
-                    value: 0
-                },
-                /**
-                * Specify the color of the video controls for vimeo player.
-                * use Hexadecimal colors (HEX) escaping the #. ex: vimeo-player-color="d60000"
-                */
-                vimeoPlayerColor: {
-                    type: String,
-                    value: ""
-                },
-                /**
-                * HTML5 mp4 video type.
-                */
-                htmlVideoMp4: {
-                    type: String,
-                    value: ""
-                },
-                /**
-                * HTML5 ogg video type.
-                */
-                htmlVideoOgg: {
-                    type: String,
-                    value: ""
-                },
-                /**
-                * HTML5 webm video type.
-                */
-                htmlVideoWebm: {
-                    type: String,
-                    value: ""
-                },
-                /**
-                * Adds a default video control overlay for the html5 video.
-                */
-                htmlVideoControls: {
-                    type: Boolean
-                },
-                /**
-                * Provides an image to show before the html5 video loads.
-                */
-                htmlVideoThumbnail: {
-                    type: String,
-                    value: ""
-                },
-                /**
-                * Sets or returns whether the audio/video should start loading as soon as the page loads, Values can be:
-                * auto => Indicates that the audio/video should start loading as soon as the page loads.
-                * metadata => Indicates that only the metadata for the audio/video should be loaded when the page loads.
-                * none => Indicates that the audio/video should NOT start loading as soon as the page loads.
-                */
-                htmlVideoPreload: {
-                    type: String
-                },
-                /**
-                * The autoplay property sets or returns whether the audio/video should start playing as soon as it is loaded.
-                */
-                videoAutoPlay: {
-                    type: Boolean
-                },
-                /**
-                * Allow player to go fullscreen
-                */
-                allowfullscreen: {
-                    type: Boolean,
-                    value: false
+        class mpVideo extends Polymer.Element {
+            static get is() {
+                return 'mp-video';
+            }
+
+            static get properties() {
+                return {
+                    /**
+                    * Specify youtube embedded video.
+                    */
+                    youtube: Boolean,
+                    /**
+                    * Specify vimeo embedded video.
+                    */
+                    vimeo: Boolean,
+                    /**
+                    * Specify HTML5 embedded video.
+                    */
+                    htmlVideo: Boolean,
+                    /**
+                    * YouTube video ID
+                    */
+                    videoId: String,
+                    /**
+                    * Set to "1" if youtube video should start automatically.
+                    */
+                    videoAutoplay: {
+                        type: Number,
+                        value: 0
+                    },
+                    /**
+                    * Sets the current volume of the audio/video.
+                    * For youtube must be a number between 0 (lowest) and 100 (highest).
+                    * For vimeo and html5 must be a number between 0.0 (lowest) and 1.0 (highest).
+                    */
+                    videoVolume: Number,
+                    /**
+                    * Set to "1" to enable youtube frameborder.
+                    */
+                    videoFrameborder: {
+                        type: Number,
+                        value: 0
+                    },
+                    /**
+                    * Specify the color of the video controls for vimeo player.
+                    * use Hexadecimal colors (HEX) escaping the #. ex: vimeo-player-color="d60000"
+                    */
+                    vimeoPlayerColor: {
+                        type: String,
+                        value: ""
+                    },
+                    /**
+                    * HTML5 mp4 video type.
+                    */
+                    htmlVideoMp4: {
+                        type: String,
+                        value: ""
+                    },
+                    /**
+                    * HTML5 ogg video type.
+                    */
+                    htmlVideoOgg: {
+                        type: String,
+                        value: ""
+                    },
+                    /**
+                    * HTML5 webm video type.
+                    */
+                    htmlVideoWebm: {
+                        type: String,
+                        value: ""
+                    },
+                    /**
+                    * Adds a default video control overlay for the html5 video.
+                    */
+                    htmlVideoControls: Boolean,
+                    /**
+                    * Provides an image to show before the html5 video loads.
+                    */
+                    htmlVideoThumbnail: {
+                        type: String,
+                        value: ""
+                    },
+                    /**
+                    * Sets or returns whether the audio/video should start loading as soon as the page loads, Values can be:
+                    * auto => Indicates that the audio/video should start loading as soon as the page loads.
+                    * metadata => Indicates that only the metadata for the audio/video should be loaded when the page loads.
+                    * none => Indicates that the audio/video should NOT start loading as soon as the page loads.
+                    */
+                    htmlVideoPreload: String,
+                    /**
+                    * The autoplay property sets or returns whether the audio/video should start playing as soon as it is loaded.
+                    */
+                    videoAutoPlay: Boolean,
+                    /**
+                    * Allow player to go fullscreen
+                    */
+                    allowfullscreen: {
+                        type: Boolean,
+                        value: false
+                    }
                 }
-            },
+            }
 
-            ready: function() {
-                // if none of the embedded video player passed send a notification
+            constructor() {
+                super();
+            }
+
+            ready() {
+                super.ready();
+
                 if (!this.youtube && !this.vimeo && !this.htmlVideo) {
-                    this.$.notifications.text = "You haven't specify any video player (youtube, vimeo, html5)."
+                    this.$.notifications.text = "You haven't specify any video player in the element (youtube, vimeo, html5)."
                     this.$.notifications.duration = 10000;
                     this.$.notifications.show();
                     return;
@@ -205,9 +168,9 @@
                 if (this.htmlVideo) {
                     this._createHtmlVideoPlayer();
                 }
-            },
-            // build the youtube iframe
-            _createYoutubePlayer: function() {
+            }
+
+            _createYoutubePlayer() {
                 var youtubeVideos = document.getElementsByTagName('mp-video');
                 var iframe = document.createElement('iframe');
 
@@ -221,30 +184,30 @@
 
                 Polymer.dom(this.$.youtubeVideo).appendChild(iframe);
                 return this.$.youtubeVideo;
-            },
-            // build the vimeo iframe
-            _createVimeoPlayer: function() {
-                var elem = this;
+            }
+
+            _createVimeoPlayer() {
                 var iframe = document.createElement('iframe');
                 var player = $f(iframe);
 
-                iframe.setAttribute('src', '//player.vimeo.com/video/' + this.videoId + "?api=1&autoplay=" + this.videoAutoplay + "&color=" + this.vimeoPlayerColor);
-                iframe.setAttribute('id', 'vimeo-player');
+                iframe.setAttribute('src', '//player.vimeo.com/video/' + this.videoId + "?api=1&autoplay=" + this.videoAutoplay + "&color=" + this.vimeoPlayerColor + "&player_id=vimeoPlayer");
+                iframe.setAttribute('id', 'vimeoPlayer');
                 iframe.setAttribute('autoplay', this.videoAutoplay);
                 iframe.setAttribute('frameborder', this.videoFrameborder);
+
                 if (this.allowfullscreen) {
                     iframe.setAttribute('allowfullscreen', '');
                 }
 
-                player.addEvent('ready', function() {
-                    player.api('setVolume', elem.videoVolume);
+                player.addEvent('ready', () => {
+                    player.api('setVolume', this.videoVolume);
                 });
 
                 Polymer.dom(this.$.vimeoVideo).appendChild(iframe);
                 return this.$.vimeoVideo;
-            },
-            // build the html5 video element
-            _createHtmlVideoPlayer: function() {
+            }
+
+            _createHtmlVideoPlayer() {
                 var video = document.createElement('video');
                 video.setAttribute('poster', this.htmlVideoThumbnail);
                 video.setAttribute('id', 'html-videmo');
@@ -261,14 +224,14 @@
                 }
 
                 if (this.htmlVideoOgg) {
-                     var sourceOgg = document.createElement('source');
+                    var sourceOgg = document.createElement('source');
                     sourceOgg.setAttribute('src', this.htmlVideoOgg);
                     sourceOgg.setAttribute('type', 'video/ogg');
                     Polymer.dom(video).appendChild(sourceOgg);
                 }
 
                 if (this.htmlVideoWebm) {
-                     var sourceWebm = document.createElement('source');
+                    var sourceWebm = document.createElement('source');
                     sourceWebm.setAttribute('src', this.htmlVideoWebm);
                     sourceWebm.setAttribute('type', 'video/webm');
                     Polymer.dom(video).appendChild(sourceWebm);
@@ -277,7 +240,8 @@
                 Polymer.dom(this.$.htmlVideo).appendChild(video);
                 return this.$.htmlVideo;
             }
+        }
 
-        });
+        customElements.define(mpVideo.is, mpVideo);
     </script>
 </dom-module>

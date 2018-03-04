@@ -1,8 +1,8 @@
 {
     "name": "mp-video",
-    "description": "YouTube, Vimeo and HTML5 video playback web component.",
-    "version": "1.0.2",
-    "homepage": "http://minas.pachnis.com",
+    "description": "YouTube, Vimeo and HTML5 video playback web component based on Polymer 2.0",
+    "version": "2.0",
+    "homepage": "https://minas.pachnis.com",
     "authors": [
         "Minas Pachnis <minas@bugeffect.com>"
     ],
@@ -22,13 +22,15 @@
         "url": "https://github.com/mpachnis/mp-video.git"
     },
     "dependencies": {
-        "polymer": "Polymer/polymer#^1.6.0",
-        "paper-toast": "^1.3.0"
+        "polymer": "^2.0.0",
+        "paper-toast": "^2.0.0"
     },
     "devDependencies": {
-        "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-        "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
-        "web-component-tester": "^4.0.0",
-        "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+        "web-component-tester": "^6.0.0",
+        "iron-component-page": "polymerelements/iron-component-page#^v2.0.0",
+        "iron-demo-helpers": "polymerelements/iron-demo-helpers#^v2.0.0",
+        "iron-test-helpers": "polymerelements/iron-test-helpers#^v2.0.0",
+        "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
     }
 }
