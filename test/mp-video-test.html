@@ -44,7 +44,7 @@
             context("", function() {
 
                 it("YouTube embed <iframe> is present", function() {
-                    expect(youtube.querySelector("iframe")).to.be.ok;
+                    expect(youtube.$.youtubeVideo.querySelector('iframe')).to.be.ok;
                 });
                 it("youtube should have a video id", function() {
                     assert.ok(youtube.videoId);
@@ -62,7 +62,7 @@
             context("", function() {
 
                 it("Vimeo embed <iframe> is present", function() {
-                    expect(vimeo.querySelector("iframe")).to.be.ok;
+                    expect(vimeo.$.vimeoVideo.querySelector("iframe")).to.be.ok;
                 });
                 it("vimeo should't have a video id", function() {
                     assert.notOk(vimeo.videoId);
@@ -80,7 +80,7 @@
             context("", function() {
 
                 it("HTML5 video is present", function() {
-                    expect(html.querySelector("video")).to.be.ok;
+                    expect(html.$.htmlVideo.querySelector("video")).to.be.ok;
                 });
 
                 it("HTML5 video tag must return mp4 type", function() {
