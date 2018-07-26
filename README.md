@@ -75,11 +75,11 @@ $ bower install --save mp-video
 
 ### Big Thanks
 
-Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
 
-[homepage]: https://saucelabs.com
+![](http://info.saucelabs.com/rs/468-XBT-687/images/powered_by_sauce_labs_badges_white_1x.png)
 
 
-## License
+### License
 
 MIT License
